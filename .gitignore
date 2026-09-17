@@ -1,0 +1,31 @@
+# ===== Git 忽略规则：以下文件永远不会被上传到 GitHub =====
+
+# 环境变量与密钥（数据库连接串、密码、API 密钥都放这里，绝不进仓库）
+.env
+.env.*
+*.env
+
+# 密钥与证书文件
+*.pem
+*.key
+*.p12
+*.pfx
+secrets.*
+credentials.*
+
+# 依赖目录（node_modules 体积巨大，可随时用 npm install 重新生成）
+node_modules/
+
+# 本地数据库文件
+*.db
+*.sqlite
+*.sqlite3
+
+# 日志文件
+*.log
+npm-debug.log*
+
+# 系统自动生成的文件（与项目无关）
+.DS_Store
+Thumbs.db
+desktop.ini
