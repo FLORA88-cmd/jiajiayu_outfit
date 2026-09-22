@@ -1,0 +1,12 @@
+{
+  "name": "jiajiayu-outfit",
+  "version": "0.1.0",
+  "description": "佳佳雨的穿搭 —— 极简穿搭分享小站（Day 7 MVP）",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^5.2.1"
+  }
+}
