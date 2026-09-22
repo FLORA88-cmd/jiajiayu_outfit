@@ -29,3 +29,6 @@ npm-debug.log*
 .DS_Store
 Thumbs.db
 desktop.ini
+
+# Office/WPS 打开文档时的临时锁文件
+~$*
