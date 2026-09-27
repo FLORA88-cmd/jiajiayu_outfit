@@ -36,6 +36,15 @@
   .card .match b { color: #c96f4a; font-weight: 500; }
   .card .time { color: #6b5a49; font-size: 12px; margin-top: 8px; }
 
+  /* ===== 点赞按钮（Day 11：有反馈的交互）===== */
+  .card .like { border: none; background: transparent; color: #d8cabb; font-size: 20px;
+                cursor: pointer; padding: 8px; line-height: 1; border-radius: 999px;
+                flex: 0 0 auto; font-family: inherit; }
+  .card .like.on { color: #c96f4a; }
+  .card .like.pop { animation: pop .3s ease; }
+  @keyframes pop { 0% { transform: scale(1) } 40% { transform: scale(1.4) } 100% { transform: scale(1) } }
+  @media (prefers-reduced-motion: reduce) { .card .like.pop { animation: none; } }
+
   /* ===== 状态一：加载中（骨架屏）===== */
   .skeleton .thumb { background: #efe7dd; }
   .sk-line { height: 12px; border-radius: 6px; background: #efe7dd; margin-top: 8px; }
@@ -100,6 +109,7 @@ function OutfitCard(item) {
         <div class="match">上衣 <b>${item.top_item}</b> ＋ 裤子 <b>${item.bottom_item}</b></div>
         <div class="time">${item.time}</div>
       </div>
+      <button class="like" data-id="${item.id}" aria-label="点赞这条穿搭">♥</button>
     </div>`;
 }
 
@@ -144,9 +154,31 @@ const states = {
 const view = document.getElementById("view");
 const buttons = document.querySelectorAll(".switcher button");
 
+// ===== 点赞交互（Day 11）：本地状态，不依赖后端，刷新后不保留 =====
+const likedIds = new Set();
+view.addEventListener("click", (e) => {
+  const btn = e.target.closest(".like");
+  if (!btn) return;
+  const id = Number(btn.dataset.id);
+  if (likedIds.has(id)) {
+    likedIds.delete(id);
+    btn.classList.remove("on");
+  } else {
+    likedIds.add(id);
+    btn.classList.add("on");
+    btn.classList.remove("pop");
+    void btn.offsetWidth; // 强制重排，让连续点击时动画每次都能重新播放
+    btn.classList.add("pop");
+  }
+});
+
 function render(state) {
   view.innerHTML = states[state] ? states[state]() : states.normal();
   buttons.forEach((b) => b.classList.toggle("on", b.dataset.state === state));
+  // 重画卡片后，把点过赞的爱心恢复成点亮状态
+  view.querySelectorAll(".like").forEach((btn) => {
+    if (likedIds.has(Number(btn.dataset.id))) btn.classList.add("on");
+  });
   const retry = document.getElementById("retryBtn");
   if (retry) retry.onclick = () => render("loading");
 }
